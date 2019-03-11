@@ -1,12 +1,29 @@
 const express = require("express");
-import { Application, Request, Response, Handler } from "express";
+const SocketIOFileUpload = require("socketio-file-upload");
+
+import { Application, Request, Response, Handler, RequestHandler } from "express";
 import { OK, INTERNAL_SERVER_ERROR } from "http-status-codes";
 import * as usersRouter from "./users/router";
+import { connect as mongooseConnect } from "mongoose";
+import * as path from "path";
 
 const app : Application = express();
+mongooseConnect(process.env.MONGO_URL as string, { useNewUrlParser: true}, (err) => {
+    if (err) {
+        console.log("Could not connect to mongodb");
+        console.error(err);
+    }
+});
 
-app.get('/', (request : Request, response : Response) => {
-    response.status(OK).send("Hello World");
+app.use(SocketIOFileUpload.router);
+app.use(express.static('public'));
+
+app.get('/', (req : Request, res : Response) => {
+    res.sendFile(path.join(__dirname , './public/user.html'));
+});
+
+app.get('/agent', (req : Request, res : Response) => {
+    res.sendFile(path.join(__dirname, './public/agent.html'));
 });
 
 app.use('/users', usersRouter);

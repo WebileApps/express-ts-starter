@@ -1,3 +1,10 @@
+.DS_Store
 node_modules
 **/*.js
 **/*.js.map
+public/uploads
+!public/uploads/.GITKEEP
+excalibur-chat.zip
+dist
+public/*.html
+karvy-chat.zip
