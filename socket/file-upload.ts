@@ -28,7 +28,7 @@ export function setupUpload(socket : Socket, io : any) {
                 const msg = `/uploads/${uploadedName}`;
                 const room = Object.keys(socket.rooms).find(key => key != socket.id) || "";
                 const message : any = await createMessage(msg, room, imgTypes.indexOf(filetype.ext) >= 0 ? "image" : "file", event.file.name);
-                io.in(room).emit('chat message', { id: message.id, username : "guest", msg, createdAt : message.createdAt, type: message.type, fileName : event.file.name });
+                io.in("global-room").emit('chat message', { id: message.id, userId : message.userId, content: message.content, createdAt : message.createdAt, type: message.type, fileName : event.file.name });
             }
             else {
                 socket.emit('fileUploadError', 'File type is not supported');
